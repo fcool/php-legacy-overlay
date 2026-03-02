@@ -432,6 +432,8 @@ src_configure() {
 
 	# Disable incompatible pointer type warning (got stricter with gcc 14)
 	append-cflags $(test-flags-CC -Wno-error=incompatible-pointer-types)
+	# set standard to be able to work with newer compiler suites
+	append-cflags -std=gnu17
 
 	# Cache the ./configure test results between SAPIs.
 	our_conf+=( --cache-file="${T}/config.cache" )
