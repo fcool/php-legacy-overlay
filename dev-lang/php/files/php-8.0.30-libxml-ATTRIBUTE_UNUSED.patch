@@ -1,0 +1,25 @@
+ATTRIBUTE_UNUSED
+php_libxml_output_buffer_create_filename
+
+Same fix as php-7.4.33-libxml-ATTRIBUTE_UNUSED.patch, but anchored on the
+8.0.30 include block (#ifdef HAVE_LIBXML instead of 7.4's #if HAVE_LIBXML).
+Without <ansidecl.h> the macro in "int compression ATTRIBUTE_UNUSED" is
+undefined, the definition of php_libxml_output_buffer_create_filename fails
+to parse (line 431) and its MINIT/RINIT call sites (lines ~897/910) then
+report it as undeclared.
+
+diff -pNaru5 a/ext/libxml/libxml.c b/ext/libxml/libxml.c
+--- a/ext/libxml/libxml.c
++++ b/ext/libxml/libxml.c
+@@ -28,10 +28,11 @@
+ #include "ext/standard/php_string.h"
+ #include "ext/standard/info.h"
+ #include "ext/standard/file.h"
+ 
+ #ifdef HAVE_LIBXML
+ 
++#include <ansidecl.h>
+ #include <libxml/parser.h>
+ #include <libxml/parserInternals.h>
+ #include <libxml/tree.h>
+ #include <libxml/uri.h>
